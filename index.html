@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPMN – Gestión por Procesos | ECOTEC</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+  :root {
+    --teal: #0097A7;
+    --teal-dark: #006978;
+    --teal-light: #E0F7FA;
+    --teal-mid: #B2EBF2;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFB;
+    --gray-100: #EEF2F5;
+    --gray-200: #D8E2EA;
+    --gray-500: #6B8390;
+    --gray-700: #334E5C;
+    --gray-900: #0D2330;
+    --accent: #FF6F3C;
+    --accent-light: #FFF0EB;
+    --green: #2E7D55;
+    --green-light: #E8F5EE;
+    --red: #C0392B;
+    --red-light: #FDECEA;
+    --yellow: #F59E0B;
+    --yellow-light: #FFFBEB;
+    --shadow-sm: 0 1px 4px rgba(0,151,167,0.08);
+    --shadow-md: 0 4px 16px rgba(0,151,167,0.12);
+    --shadow-lg: 0 8px 32px rgba(0,151,167,0.16);
+    --radius: 12px;
+    --radius-lg: 18px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  .page-header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, #00BCD4 100%);
+    color: white;
+    padding: 2.5rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 100px;
+    padding: 0.3rem 1rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .header-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .header-subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-bottom: 2rem;
+  }
+  .header-meta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    background: rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ─── NAV TABS ─── */
+  .tab-nav {
+    background: white;
+    border-bottom: 2px solid var(--gray-100);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-nav-inner {
+    display: flex;
+    min-width: max-content;
+    padding: 0 1rem;
+  }
+  .tab-btn {
+    padding: 1rem 1.2rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tab-btn:hover { color: var(--teal); }
+  .tab-btn.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+    font-weight: 600;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--gray-100);
+  }
+  .card-teal {
+    background: var(--teal-light);
+    border-color: var(--teal-mid);
+  }
+
+  /* ─── INTRO SECTION ─── */
+  .intro-hero {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-hero::after {
+    content: 'BPMN';
+    position: absolute;
+    right: -10px; bottom: -20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 7rem;
+    font-weight: 800;
+    opacity: 0.08;
+    color: white;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .intro-hero h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  .intro-hero p { font-size: 0.95rem; line-height: 1.6; opacity: 0.9; }
+
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .outcome-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    border: 1px solid var(--gray-100);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+  .outcome-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .outcome-text h4 { font-size: 0.85rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.3rem; }
+  .outcome-text p { font-size: 0.8rem; color: var(--gray-500); line-height: 1.5; }
+
+  .agenda-list { list-style: none; }
+  .agenda-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .agenda-item:last-child { border-bottom: none; }
+  .agenda-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .agenda-item span { font-size: 0.9rem; color: var(--gray-700); font-weight: 500; }
+
+  /* ─── CONTENT SECTIONS ─── */
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 0.3rem;
+  }
+  .section-desc {
+    font-size: 0.88rem;
+    color: var(--gray-500);
+    margin-bottom: 1.5rem;
+  }
+
+  .info-block {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid var(--teal);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+  }
+  .info-block h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .info-block p { font-size: 0.88rem; line-height: 1.65; color: var(--gray-700); }
+
+  .elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .element-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+  }
+  .element-card h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .element-card p { font-size: 0.82rem; color: var(--gray-700); line-height: 1.55; }
+  .element-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 6px;
+    background: var(--teal-light);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  /* ─── BPMN VISUAL DIAGRAM ─── */
+  .bpmn-diagram {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 2px solid var(--teal-mid);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .bpmn-diagram h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .bpmn-svg-wrap { min-width: 500px; }
+
+  /* ─── GATEWAY CARDS ─── */
+  .gw-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .gw-card {
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1px solid var(--gray-200);
+    background: white;
+  }
+  .gw-symbol {
+    width: 48px; height: 48px;
+    transform: rotate(45deg);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+  .gw-symbol-inner {
+    transform: rotate(-45deg);
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--teal-dark);
+  }
+  .gw-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.4rem; }
+  .gw-card p { font-size: 0.8rem; color: var(--gray-500); line-height: 1.5; }
+
+  /* ─── GAMES ─── */
+  .game-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+  }
+  .game-header {
+    background: linear-gradient(90deg, var(--teal-dark), var(--teal));
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .game-header h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .game-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .game-body { padding: 1.5rem; }
+
+  /* QUIZ */
+  .quiz-question { font-size: 0.95rem; font-weight: 600; color: var(--gray-900); margin-bottom: 1rem; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+  .quiz-opt {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--gray-700);
+    background: var(--gray-50);
+    transition: all 0.2s;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+  }
+  .quiz-opt:hover { border-color: var(--teal); background: var(--teal-light); }
+  .quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .quiz-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .quiz-opt.disabled { cursor: not-allowed; pointer-events: none; }
+  .quiz-feedback {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: none;
+    margin-bottom: 1rem;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--green-light); color: var(--green); }
+  .quiz-feedback.wrong { background: var(--red-light); color: var(--red); }
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; }
+  .quiz-counter { font-size: 0.8rem; color: var(--gray-500); }
+  .quiz-progress { height: 4px; background: var(--gray-100); border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden; }
+  .quiz-progress-bar { height: 100%; background: var(--teal); border-radius: 2px; transition: width 0.4s; }
+
+  /* MATCHING GAME */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .match-col h4 { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-500); margin-bottom: 0.75rem; }
+  .match-item {
+    padding: 0.7rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    background: white;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+    user-select: none;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    line-height: 1.3;
+  }
+  .match-item:hover { border-color: var(--teal); background: var(--teal-light); }
+  .match-item.selected { border-color: var(--teal); background: var(--teal-light); font-weight: 600; }
+  .match-item.matched { border-color: var(--green); background: var(--green-light); color: var(--green); cursor: default; pointer-events: none; font-weight: 600; }
+  .match-item.wrong-flash { border-color: var(--red); background: var(--red-light); }
+
+  /* DRAG & DROP SORTING */
+  .dnd-instruction { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 1rem; }
+  .dnd-list { list-style: none; min-height: 60px; }
+  .dnd-item {
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    cursor: grab;
+    font-size: 0.88rem;
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .dnd-item:active { cursor: grabbing; }
+  .dnd-item.dragging { opacity: 0.4; border-style: dashed; }
+  .dnd-item.drag-over { border-color: var(--teal); background: var(--teal-light); }
+  .dnd-handle { color: var(--gray-500); font-size: 1rem; }
+  .dnd-num {
+    width: 28px; height: 28px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .dnd-correct .dnd-item { border-color: var(--green); background: var(--green-light); }
+  .dnd-correct .dnd-num { background: var(--green); color: white; }
+
+  /* TRUE/FALSE */
+  .tf-statement { font-size: 0.95rem; font-weight: 500; color: var(--gray-900); margin-bottom: 1.25rem; line-height: 1.55; padding: 1rem; background: var(--gray-50); border-radius: 10px; }
+  .tf-btns { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .tf-btn {
+    flex: 1;
+    padding: 0.9rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .tf-btn.verdadero:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .tf-btn.falso:hover { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .tf-btn.verdadero.selected-correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .tf-btn.verdadero.selected-wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .tf-btn.falso.selected-correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .tf-btn.falso.selected-wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .tf-btn.disabled { pointer-events: none; opacity: 0.7; }
+
+  /* FILL IN THE BLANK */
+  .fill-text { font-size: 0.95rem; line-height: 1.8; color: var(--gray-700); margin-bottom: 1rem; }
+  .fill-blank {
+    display: inline-block;
+    border-bottom: 2px solid var(--teal);
+    min-width: 100px;
+    padding: 0 4px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--teal-dark);
+    cursor: pointer;
+    position: relative;
+  }
+  .fill-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .fill-chip {
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--teal-mid);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background: white;
+    color: var(--teal-dark);
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .fill-chip:hover { background: var(--teal); color: white; border-color: var(--teal); }
+  .fill-chip.used { opacity: 0.35; pointer-events: none; }
+  .fill-chip.correct-source { background: var(--green); color: white; border-color: var(--green); pointer-events: none; }
+
+  /* SCENARIO GAME */
+  .scenario-box {
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--gray-200);
+  }
+  .scenario-box h4 { font-size: 0.88rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 0.5rem; }
+  .scenario-box p { font-size: 0.85rem; color: var(--gray-700); line-height: 1.55; }
+  .scenario-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+  .scenario-opt {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    background: white;
+    color: var(--gray-700);
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .scenario-opt:hover { border-color: var(--teal); background: var(--teal-light); }
+  .scenario-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; pointer-events: none; }
+  .scenario-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); pointer-events: none; }
+
+  /* BUTTONS */
+  .btn {
+    padding: 0.65rem 1.4rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--teal); color: white; }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-outline { background: transparent; color: var(--teal); border: 2px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-ghost { background: var(--gray-100); color: var(--gray-700); }
+  .btn-ghost:hover { background: var(--gray-200); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* SCORE BADGE */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 100px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  /* SYNTHESIS */
+  .synth-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid var(--teal);
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .synth-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+  .synth-card p, .synth-card ul { font-size: 0.87rem; color: var(--gray-700); line-height: 1.65; }
+  .synth-card ul { padding-left: 1.2rem; }
+  .synth-card li { margin-bottom: 0.3rem; }
+
+  .bib-item {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--gray-200);
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    line-height: 1.55;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .bib-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .bib-item a { color: var(--teal); text-decoration: none; font-weight: 600; }
+  .bib-item a:hover { text-decoration: underline; }
+
+  /* SCORE PANEL */
+  .score-panel {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 2px solid var(--teal-mid);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .score-panel h3 { font-size: 1rem; font-weight: 700; color: var(--teal-dark); }
+  .score-panel p { font-size: 0.82rem; color: var(--gray-500); margin-top: 0.25rem; }
+  .score-big { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--teal); }
+
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--gray-700); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .match-grid { grid-template-columns: 1fr; }
+    .outcomes-grid { grid-template-columns: 1fr; }
+    .elements-grid { grid-template-columns: 1fr; }
+    .gw-cards { grid-template-columns: 1fr; }
+    .tf-btns { flex-direction: column; }
+  }
+
+  /* RESULT OVERLAY */
+  .result-overlay {
+    display: none;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 1.5rem;
+  }
+  .result-overlay.show { display: block; }
+  .result-emoji { font-size: 3rem; margin-bottom: 0.75rem; }
+  .result-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; }
+  .result-sub { font-size: 0.9rem; color: var(--gray-500); margin-bottom: 1.5rem; }
+
+  /* ACCORDION */
+  .accordion-item { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 0.75rem; overflow: hidden; }
+  .accordion-header {
+    padding: 1rem 1.25rem;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: var(--gray-50); }
+  .accordion-header.open { background: var(--teal-light); color: var(--teal-dark); }
+  .accordion-chevron { font-size: 0.75rem; transition: transform 0.2s; }
+  .accordion-header.open .accordion-chevron { transform: rotate(180deg); }
+  .accordion-body { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; }
+  .accordion-body.open { max-height: 600px; padding: 1rem 1.25rem 1.25rem; }
+  .accordion-body p, .accordion-body ul { font-size: 0.86rem; color: var(--gray-700); line-height: 1.6; }
+  .accordion-body ul { padding-left: 1.2rem; }
+  .accordion-body li { margin-bottom: 0.3rem; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-badge">Gestión por Procesos · Unidad 3 · Sesión 3</div>
+  <h1 class="header-title">Business Process Model and Notation</h1>
+  <p class="header-subtitle">Modelado de procesos de negocio con estándar BPMN</p>
+  <div class="header-meta">
+    <div class="meta-chip">📘 Ing. Marcela Medina B., M.Sc.</div>
+    <div class="meta-chip">🎓 Universidad ECOTEC</div>
+    <div class="meta-chip">⏱ 90 minutos</div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-btn active" onclick="showTab('intro')">🏁 Inicio</button>
+    <button class="tab-btn" onclick="showTab('que-es')">💡 ¿Qué es BPMN?</button>
+    <button class="tab-btn" onclick="showTab('elementos')">🧩 Elementos</button>
+    <button class="tab-btn" onclick="showTab('ejemplo')">🗺 Ejemplo práctico</button>
+    <button class="tab-btn" onclick="showTab('juegos')">🎮 Actividades</button>
+    <button class="tab-btn" onclick="showTab('construye')">🔧 Construye tu proceso</button>
+    <button class="tab-btn" onclick="showTab('sintesis')">📋 Síntesis</button>
+    <button class="tab-btn" onclick="showTab('bib')">📚 Bibliografía</button>
+  </div>
+</nav>
+
+<!-- ══════ INTRO ══════ -->
+<div id="intro" class="section active">
+<div class="section-body">
+
+  <div class="intro-hero">
+    <h2>Bienvenidos a la sesión</h2>
+    <p>BPMN (Business Process Model and Notation) es el lenguaje visual universal para documentar, analizar y automatizar procesos de negocio. En esta sesión explorarás sus elementos clave, aprenderás a leer y construir diagramas, y pondrás en práctica tus conocimientos con actividades interactivas.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--teal-dark);margin-bottom:0.75rem;">🎯 Objetivo de la sesión</h3>
+    <p style="font-size:0.92rem;color:var(--gray-700);line-height:1.65;">Brindar una comprensión sólida de BPMN, sus elementos clave, y cómo utilizarlo para modelar procesos de negocio de manera efectiva, cerrando la brecha entre el diseño del proceso y su implementación técnica.</p>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin-bottom:1rem;">Al finalizar esta sesión serás capaz de…</h3>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <div class="outcome-icon">🔍</div>
+      <div class="outcome-text">
+        <h4>Identificar los elementos de BPMN</h4>
+        <p>Reconocer eventos, actividades, compuertas, participantes, flujos y artefactos en cualquier diagrama.</p>
+      </div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">🗣</div>
+      <div class="outcome-text">
+        <h4>Comunicar procesos con precisión</h4>
+        <p>Utilizar la notación estándar para documentar y comunicar procesos entre áreas de negocio y tecnología.</p>
+      </div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">⚙️</div>
+      <div class="outcome-text">
+        <h4>Modelar un proceso paso a paso</h4>
+        <p>Construir un diagrama BPMN básico de una situación organizacional real con sus compuertas y participantes.</p>
+      </div>
+    </div>
+    <div class="outcome-card">
+      <div class="outcome-icon">🔄</div>
+      <div class="outcome-text">
+        <h4>Distinguir tipos de compuertas</h4>
+        <p>Diferenciar y aplicar correctamente las compuertas XOR, AND y OR según las condiciones del proceso.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-teal">
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--teal-dark);margin-bottom:1rem;">📌 Agenda de la sesión</h3>
+    <ul class="agenda-list">
+      <li class="agenda-item"><div class="agenda-num">1</div><span>¿Qué es BPMN? Origen y propósito</span></li>
+      <li class="agenda-item"><div class="agenda-num">2</div><span>Elementos de BPMN: flujos, eventos, actividades, compuertas, participantes y artefactos</span></li>
+      <li class="agenda-item"><div class="agenda-num">3</div><span>Ejemplo práctico: gestión de una orden de compra</span></li>
+      <li class="agenda-item"><div class="agenda-num">4</div><span>Actividades interactivas y juegos de refuerzo</span></li>
+      <li class="agenda-item"><div class="agenda-num">5</div><span>Actividad de construcción: diseña tu propio diagrama BPMN</span></li>
+      <li class="agenda-item"><div class="agenda-num">6</div><span>Síntesis de la sesión y bibliografía</span></li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ QUÉ ES BPMN ══════ -->
+<div id="que-es" class="section">
+<div class="section-body">
+
+  <div class="section-title">¿Qué es BPMN?</div>
+  <p class="section-desc">Origen, propósito e importancia del estándar de modelado de procesos de negocio.</p>
+
+  <div class="info-block">
+    <h3>📖 Definición</h3>
+    <p>BPMN (Business Process Model and Notation) es una <strong>notación gráfica estándar</strong> utilizada para modelar procesos de negocio. Creada por la <em>Business Process Management Initiative (BPMI)</em>, que posteriormente se fusionó con la <em>Object Management Group (OMG)</em> — organización que actualmente mantiene el estándar en su versión 2.0.</p>
+  </div>
+
+  <div class="info-block">
+    <h3>🎯 Propósito central</h3>
+    <p>BPMN busca <strong>cerrar la brecha de comunicación</strong> entre el diseño del proceso de negocio y su implementación técnica. Su notación visual facilita la comprensión mutua entre gerentes de negocio, analistas de procesos y desarrolladores de software, permitiendo que todos hablen "el mismo idioma" al documentar un proceso.</p>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">¿Por qué es importante?</h3>
+
+  <div id="acc-importancia">
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        📣 Estandarización de la comunicación <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Proporciona un lenguaje visual único que elimina las ambigüedades al describir procesos. Tanto el área de negocio como TI comparten el mismo diagrama y entienden exactamente el mismo flujo.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        📝 Claridad en la documentación de procesos <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Los manuales de procedimientos basados en BPMN son más precisos, menos propensos a interpretaciones erróneas y más fáciles de actualizar que la documentación textual tradicional.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        🔄 Facilitación de la mejora y optimización <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Al visualizar el proceso completo, es más sencillo identificar cuellos de botella, redundancias y oportunidades de mejora. El diagrama se convierte en la base para los análisis de tiempo y valor.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        🤖 Apoyo a la automatización de procesos <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Los motores de procesos (BPM engines) como Bizagi o Camunda pueden leer diagramas BPMN directamente para ejecutar y automatizar los flujos, haciendo que el modelo sea ejecutable.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        📐 Escalabilidad y flexibilidad <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>BPMN se adapta tanto a procesos simples (5 pasos) como a procesos altamente complejos con múltiples participantes, subprocesos y excepciones. Se aplica en manufactura, servicios financieros, logística, salud y cualquier industria.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">
+        ✅ Mejora del control y cumplimiento normativo <span class="accordion-chevron">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Las auditorías y los sistemas de gestión (ISO 9001, ISO 27001) pueden verificar más fácilmente el cumplimiento de procedimientos cuando los procesos están modelados en BPMN, ya que la evidencia visual es trazable.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem;background:var(--accent-light);border-color:#FFDDD0;">
+    <h3 style="font-size:0.9rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem;">💡 Dato clave para recordar</h3>
+    <p style="font-size:0.87rem;color:var(--gray-700);line-height:1.6;">BPMN no es una herramienta — es un <em>estándar gráfico</em>. Puedes dibujarlo en Bizagi, Lucidchart, draw.io, Visio o incluso en papel. Lo que importa es respetar los símbolos y su semántica para que cualquier persona capacitada en BPMN pueda leer tu diagrama sin explicaciones adicionales.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ ELEMENTOS ══════ -->
+<div id="elementos" class="section">
+<div class="section-body">
+
+  <div class="section-title">Elementos de BPMN</div>
+  <p class="section-desc">Los bloques fundamentales con los que se construye cualquier diagrama BPMN.</p>
+
+  <!-- FLUJOS -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin-bottom:1rem;">1. Flujos de Secuencia y Flujos de Mensaje</h3>
+  <div class="elements-grid">
+    <div class="element-card">
+      <h3><span class="element-symbol">➡️</span> Flujo de Secuencia</h3>
+      <p>Indica el <strong>orden de ejecución</strong> de las actividades dentro de un mismo pool. Se representa como una <em>flecha sólida</em>. Conecta eventos, actividades y compuertas mostrando la progresión normal del proceso.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">✉️</span> Flujo de Mensaje</h3>
+      <p>Representa la <strong>comunicación entre participantes</strong> de diferentes pools (p. ej., empresa ↔ cliente). Se dibuja como una <em>línea discontinua con sobre</em>. No indica secuencia, sino intercambio de información.</p>
+    </div>
+  </div>
+
+  <!-- EVENTOS -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">2. Eventos</h3>
+  <div class="elements-grid">
+    <div class="element-card">
+      <h3><span class="element-symbol">⚪</span> Evento de Inicio</h3>
+      <p>Marca el <strong>comienzo del proceso</strong>. Círculo de borde delgado. Puede incluir disparadores: un mensaje recibido, un tiempo programado, o una condición que se cumple.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">🔵</span> Evento Intermedio</h3>
+      <p>Ocurre <strong>entre el inicio y el final</strong>. Círculo de doble borde. Puede representar una espera, una interrupción, o una condición que debe cumplirse antes de continuar.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">⬛</span> Evento de Fin</h3>
+      <p>Señala el <strong>término del proceso</strong>. Círculo de borde grueso. Un proceso puede tener múltiples eventos de fin para reflejar distintos resultados posibles.</p>
+    </div>
+  </div>
+
+  <!-- ACTIVIDADES -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">3. Actividades</h3>
+  <div class="elements-grid">
+    <div class="element-card">
+      <h3><span class="element-symbol">📋</span> Tarea</h3>
+      <p>Unidad básica de trabajo. Rectángulo con esquinas redondeadas. Representa una acción ejecutable: "Aprobar Solicitud", "Enviar Factura". Puede ser manual, automática, de usuario o de servicio.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">📦</span> Subproceso</h3>
+      <p>Grupo de tareas que se ejecutan como una única actividad dentro del proceso principal. Rectángulo con <strong>signo + en la esquina</strong>. Simplifica diagramas complejos al ocultar detalles internos.</p>
+    </div>
+  </div>
+
+  <!-- COMPUERTAS -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">4. Compuertas (Gateways)</h3>
+  <div class="gw-cards">
+    <div class="gw-card" style="border-top:4px solid var(--teal);">
+      <div class="gw-symbol" style="background:var(--teal-light);border-radius:4px;">
+        <span class="gw-symbol-inner" style="color:var(--teal-dark);">✕</span>
+      </div>
+      <h4>Exclusiva (XOR)</h4>
+      <p>Solo <strong>un camino</strong> puede seguirse. Decisión basada en una condición: ¿solicitud aprobada o rechazada? Rombo con X.</p>
+    </div>
+    <div class="gw-card" style="border-top:4px solid var(--accent);">
+      <div class="gw-symbol" style="background:var(--accent-light);border-radius:4px;">
+        <span class="gw-symbol-inner" style="color:var(--accent);">＋</span>
+      </div>
+      <h4>Paralela (AND)</h4>
+      <p>Todos los caminos se siguen <strong>simultáneamente</strong>. Las tareas ocurren en paralelo. Rombo con +. Se usa también para sincronizar actividades paralelas.</p>
+    </div>
+    <div class="gw-card" style="border-top:4px solid var(--green);">
+      <div class="gw-symbol" style="background:var(--green-light);border-radius:4px;">
+        <span class="gw-symbol-inner" style="color:var(--green);">○</span>
+      </div>
+      <h4>Inclusiva (OR)</h4>
+      <p><strong>Uno o más caminos</strong> según las condiciones. Pueden ocurrir múltiples alternativas simultáneamente. Rombo con círculo.</p>
+    </div>
+  </div>
+
+  <!-- PARTICIPANTES -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">5. Participantes</h3>
+  <div class="elements-grid">
+    <div class="element-card">
+      <h3><span class="element-symbol">🏊</span> Piscina (Pool)</h3>
+      <p>Representa un <strong>participante externo o entidad</strong> completa: una organización, un sistema o un cliente. Cada pool tiene su propio flujo interno independiente.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">🏷</span> Carril (Lane)</h3>
+      <p>Divide el pool en <strong>roles, departamentos o funciones</strong> dentro de la misma entidad. Ejemplo: Ventas | Finanzas | Logística dentro de la piscina "Empresa".</p>
+    </div>
+  </div>
+
+  <!-- ARTEFACTOS -->
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">6. Artefactos</h3>
+  <div class="elements-grid">
+    <div class="element-card">
+      <h3><span class="element-symbol">📝</span> Anotaciones</h3>
+      <p>Notas o comentarios que <strong>clarifican</strong> elementos específicos del diagrama. No afectan el flujo, solo añaden contexto explicativo.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">📂</span> Datos</h3>
+      <p>Representan la <strong>entrada y salida de información</strong>: formularios, documentos, bases de datos. Indican qué información consume o produce una actividad.</p>
+    </div>
+    <div class="element-card">
+      <h3><span class="element-symbol">🗂</span> Grupos</h3>
+      <p>Agrupaciones visuales para indicar que elementos están <strong>relacionados conceptualmente</strong>, sin afectar el flujo del proceso.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ EJEMPLO PRÁCTICO ══════ -->
+<div id="ejemplo" class="section">
+<div class="section-body">
+
+  <div class="section-title">Ejemplo práctico</div>
+  <p class="section-desc">Gestión de una Orden de Compra — un proceso clásico que integra los elementos principales de BPMN.</p>
+
+  <div class="card">
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--teal-dark);margin-bottom:0.75rem;">📋 Descripción del proceso</h3>
+    <p style="font-size:0.88rem;color:var(--gray-700);line-height:1.65;">Una empresa recibe una orden de compra. El área de Ventas la revisa y decide si aprobarla o rechazarla. Si se aprueba, Finanzas valida el presupuesto antes de enviar la orden al proveedor. Si se rechaza, se notifica al solicitante y el proceso concluye.</p>
+  </div>
+
+  <div class="bpmn-diagram">
+    <h3>Diagrama BPMN – Orden de Compra</h3>
+    <div class="bpmn-svg-wrap">
+      <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" font-size="11">
+        <!-- Pool: Empresa -->
+        <rect x="10" y="10" width="700" height="240" rx="6" fill="#F8FAFB" stroke="#B2EBF2" stroke-width="2"/>
+        <text x="22" y="130" font-size="11" fill="#006978" font-weight="700" transform="rotate(-90,22,130)" text-anchor="middle">EMPRESA</text>
+
+        <!-- Lane: Ventas -->
+        <rect x="40" y="10" width="660" height="120" fill="#E0F7FA" stroke="#B2EBF2" stroke-width="1"/>
+        <text x="52" y="72" font-size="10" fill="#006978" font-weight="600" transform="rotate(-90,52,72)" text-anchor="middle">Ventas</text>
+
+        <!-- Lane: Finanzas -->
+        <rect x="40" y="130" width="660" height="120" fill="#FFF" stroke="#B2EBF2" stroke-width="1"/>
+        <text x="52" y="192" font-size="10" fill="#006978" font-weight="600" transform="rotate(-90,52,192)" text-anchor="middle">Finanzas</text>
+
+        <!-- START EVENT -->
+        <circle cx="95" cy="70" r="16" fill="#fff" stroke="#0097A7" stroke-width="2.5"/>
+        <text x="95" y="96" text-anchor="middle" fill="#334E5C" font-size="9">Recepción</text>
+        <text x="95" y="106" text-anchor="middle" fill="#334E5C" font-size="9">Orden</text>
+
+        <!-- Arrow 1 -->
+        <line x1="111" y1="70" x2="155" y2="70" stroke="#006978" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+        <!-- Task: Revisar Orden (Ventas) -->
+        <rect x="155" y="48" width="120" height="44" rx="8" fill="#fff" stroke="#0097A7" stroke-width="1.8"/>
+        <text x="215" y="68" text-anchor="middle" fill="#006978" font-weight="600">Revisar</text>
+        <text x="215" y="82" text-anchor="middle" fill="#006978" font-weight="600">Orden</text>
+
+        <!-- Arrow 2 -->
+        <line x1="275" y1="70" x2="315" y2="70" stroke="#006978" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+        <!-- Gateway XOR -->
+        <polygon points="335,50 365,70 335,90 305,70" fill="#E0F7FA" stroke="#0097A7" stroke-width="2"/>
+        <text x="335" y="74" text-anchor="middle" fill="#006978" font-size="13" font-weight="800">✕</text>
+        <text x="335" y="102" text-anchor="middle" fill="#334E5C" font-size="9">¿Aprobada?</text>
+
+        <!-- Arrow 3 - Rechazada (down-right toward end) -->
+        <line x1="365" y1="70" x2="430" y2="70" stroke="#C0392B" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arrowRed)"/>
+        <text x="392" y="63" text-anchor="middle" fill="#C0392B" font-size="9" font-weight="600">No</text>
+
+        <!-- Task: Notificar Rechazo -->
+        <rect x="430" y="48" width="120" height="44" rx="8" fill="#fff" stroke="#C0392B" stroke-width="1.8"/>
+        <text x="490" y="68" text-anchor="middle" fill="#C0392B" font-weight="600">Notificar</text>
+        <text x="490" y="82" text-anchor="middle" fill="#C0392B" font-weight="600">Rechazo</text>
+
+        <!-- Arrow 4 to end (reject) -->
+        <line x1="550" y1="70" x2="600" y2="70" stroke="#C0392B" stroke-width="1.8" marker-end="url(#arrowRed)"/>
+
+        <!-- END EVENT Rechazado -->
+        <circle cx="616" cy="70" r="16" fill="#FDECEA" stroke="#C0392B" stroke-width="3"/>
+        <text x="616" y="96" text-anchor="middle" fill="#C0392B" font-size="9">Rechazado</text>
+
+        <!-- Arrow YES from gateway down to Finanzas lane -->
+        <line x1="335" y1="90" x2="335" y2="165" stroke="#006978" stroke-width="1.8" marker-end="url(#arrow)"/>
+        <text x="320" y="135" text-anchor="middle" fill="#2E7D55" font-size="9" font-weight="600">Sí</text>
+
+        <!-- Task: Validar Presupuesto (Finanzas) -->
+        <rect x="275" y="165" width="120" height="44" rx="8" fill="#fff" stroke="#0097A7" stroke-width="1.8"/>
+        <text x="335" y="185" text-anchor="middle" fill="#006978" font-weight="600">Validar</text>
+        <text x="335" y="199" text-anchor="middle" fill="#006978" font-weight="600">Presupuesto</text>
+
+        <!-- Arrow from Validar to Enviar -->
+        <line x1="395" y1="187" x2="435" y2="187" stroke="#006978" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+        <!-- Task: Enviar Orden al Proveedor (Finanzas) -->
+        <rect x="435" y="165" width="130" height="44" rx="8" fill="#fff" stroke="#0097A7" stroke-width="1.8"/>
+        <text x="500" y="185" text-anchor="middle" fill="#006978" font-weight="600">Enviar al</text>
+        <text x="500" y="199" text-anchor="middle" fill="#006978" font-weight="600">Proveedor</text>
+
+        <!-- Arrow to end approved -->
+        <line x1="565" y1="187" x2="600" y2="187" stroke="#006978" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+        <!-- END EVENT Procesado -->
+        <circle cx="616" cy="187" r="16" fill="#E8F5EE" stroke="#2E7D55" stroke-width="3"/>
+        <text x="616" y="213" text-anchor="middle" fill="#2E7D55" font-size="9">Procesado</text>
+
+        <!-- Arrowhead markers -->
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#006978"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#C0392B"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin-bottom:1rem;">🔍 Pasos para construir el diagrama</h3>
+
+  <div id="acc-pasos">
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">Paso 1 — Crear pools y carriles <span class="accordion-chevron">▼</span></button>
+      <div class="accordion-body"><p>Crear un pool para la organización "Empresa" y dividirlo en carriles para los departamentos de <strong>Ventas</strong> y <strong>Finanzas</strong>. Cada carril representa quién ejecuta las actividades dentro de ese espacio.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">Paso 2 — Evento de inicio <span class="accordion-chevron">▼</span></button>
+      <div class="accordion-body"><p>Agregar un <strong>evento de inicio</strong> en el carril de Ventas. Este evento representa la recepción de la orden de compra. Es el disparador que pone en marcha todo el proceso.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">Paso 3 — Tareas principales <span class="accordion-chevron">▼</span></button>
+      <div class="accordion-body"><p>Añadir las tareas: <strong>"Revisar Orden"</strong> en Ventas, <strong>"Validar Presupuesto"</strong> y <strong>"Enviar Orden al Proveedor"</strong> en Finanzas. Las tareas se representan como rectángulos con esquinas redondeadas.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">Paso 4 — Compuerta exclusiva XOR <span class="accordion-chevron">▼</span></button>
+      <div class="accordion-body"><p>Usar una <strong>compuerta exclusiva (XOR)</strong> después de "Revisar Orden". Esta decide si la orden se aprueba (camino hacia Finanzas) o se rechaza (camino hacia "Notificar Rechazo"). Solo un camino puede ser seguido.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAcc(this)">Paso 5 — Eventos de finalización <span class="accordion-chevron">▼</span></button>
+      <div class="accordion-body"><p>Agregar dos <strong>eventos de finalización</strong>: uno para "Orden Procesada" (camino de aprobación) y otro para "Orden Rechazada" (camino de rechazo). Esto refleja que el proceso puede terminar en dos estados distintos.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--yellow-light);border-color:#FCD34D;margin-top:1.25rem;">
+    <h3 style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:0.5rem;">🔑 Reflexión</h3>
+    <p style="font-size:0.87rem;color:#78350F;line-height:1.6;">¿Qué pasaría si en lugar de una compuerta XOR usáramos una OR? ¿Cambiaría la lógica del proceso? ¿Cuándo tendría sentido que tanto el camino de aprobación <em>como</em> el de rechazo ocurrieran al mismo tiempo?</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ ACTIVIDADES / JUEGOS ══════ -->
+<div id="juegos" class="section">
+<div class="section-body">
+
+  <div class="section-title">Actividades interactivas</div>
+  <p class="section-desc">Pon a prueba lo aprendido. Completa las actividades para reforzar los conceptos de BPMN.</p>
+
+  <!-- SCORE PANEL -->
+  <div class="score-panel">
+    <div>
+      <h3>Tu puntuación acumulada</h3>
+      <p>Se actualiza con cada actividad completada</p>
+    </div>
+    <div style="text-align:center;">
+      <div class="score-big" id="total-score">0</div>
+      <div style="font-size:0.75rem;color:var(--gray-500);">puntos</div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDAD 1: QUIZ ── -->
+  <div class="game-card" id="quiz-game">
+    <div class="game-header">
+      <h3>🧠 Actividad 1 – Quiz de conceptos</h3>
+      <span class="game-badge" id="quiz-score-badge">0 / 8</span>
+    </div>
+    <div class="game-body">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-progress-bar" style="width:0%"></div></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDAD 2: MATCHING ── -->
+  <div class="game-card" id="match-game">
+    <div class="game-header">
+      <h3>🔗 Actividad 2 – Relaciona el elemento con su descripción</h3>
+      <span class="game-badge" id="match-score-badge">0 / 6</span>
+    </div>
+    <div class="game-body">
+      <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1rem;">Haz clic en un elemento de la izquierda y luego en su descripción correspondiente de la derecha.</p>
+      <div class="match-grid">
+        <div class="match-col">
+          <h4>Elemento BPMN</h4>
+          <div id="match-left"></div>
+        </div>
+        <div class="match-col">
+          <h4>Descripción</h4>
+          <div id="match-right"></div>
+        </div>
+      </div>
+      <div id="match-feedback" style="display:none;padding:0.75rem 1rem;border-radius:10px;font-size:0.85rem;margin-top:0.5rem;"></div>
+      <button class="btn btn-ghost" onclick="resetMatch()" style="margin-top:0.5rem;">🔄 Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDAD 3: VERDADERO / FALSO ── -->
+  <div class="game-card" id="tf-game">
+    <div class="game-header">
+      <h3>✅ Actividad 3 – Verdadero o Falso</h3>
+      <span class="game-badge" id="tf-score-badge">0 / 6</span>
+    </div>
+    <div class="game-body">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="tf-progress-bar" style="width:0%"></div></div>
+      <div id="tf-container"></div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDAD 4: FILL IN THE BLANK ── -->
+  <div class="game-card" id="fill-game">
+    <div class="game-header">
+      <h3>📝 Actividad 4 – Completa el concepto</h3>
+      <span class="game-badge" id="fill-score-badge">0 / 5</span>
+    </div>
+    <div class="game-body">
+      <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1rem;">Haz clic en una palabra del banco y luego en el espacio en blanco donde corresponde.</p>
+      <div id="fill-container"></div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDAD 5: ESCENARIOS ── -->
+  <div class="game-card" id="scenario-game">
+    <div class="game-header">
+      <h3>🎯 Actividad 5 – Elige el elemento correcto</h3>
+      <span class="game-badge" id="scenario-score-badge">0 / 4</span>
+    </div>
+    <div class="game-body">
+      <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1rem;">Lee la situación y selecciona el elemento BPMN más apropiado.</p>
+      <div id="scenario-container"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ CONSTRUYE TU PROCESO ══════ -->
+<div id="construye" class="section">
+<div class="section-body">
+
+  <div class="section-title">🔧 Construye tu proceso</div>
+  <p class="section-desc">Actividad de aplicación práctica: diseña tu propio diagrama BPMN respondiendo preguntas guiadas.</p>
+
+  <div class="card" style="background:var(--teal-light);border-color:var(--teal-mid);">
+    <h3 style="font-size:0.95rem;font-weight:700;color:var(--teal-dark);margin-bottom:0.5rem;">📌 Instrucciones</h3>
+    <p style="font-size:0.87rem;color:var(--gray-700);line-height:1.65;">Elige uno de los procesos propuestos o utiliza uno de tu área de trabajo/estudio. Responde las preguntas guía y luego elabora el diagrama BPMN en la herramienta que prefieras (Bizagi Modeler, draw.io, Lucidchart o papel). Al finalizar, comparte tu diagrama con la clase para retroalimentación.</p>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--gray-700);margin:1.5rem 0 1rem;">Procesos sugeridos</h3>
+
+  <div class="elements-grid">
+    <div class="element-card" style="cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="selectScenario(this,'A')">
+      <h3>🎓 A — Proceso de matrícula universitaria</h3>
+      <p>Solicitud del estudiante → revisión de requisitos → aprobación académica → pago en Financiero → confirmación de matrícula.</p>
+    </div>
+    <div class="element-card" style="cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="selectScenario(this,'B')">
+      <h3>🚚 B — Despacho de mercadería</h3>
+      <p>Generación de pedido → verificación de inventario → preparación del despacho → notificación al cliente → entrega y confirmación.</p>
+    </div>
+    <div class="element-card" style="cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="selectScenario(this,'C')">
+      <h3>👩‍💼 C — Solicitud de vacaciones</h3>
+      <p>Empleado solicita días → jefe revisa disponibilidad → RRHH valida → aprobación/rechazo → notificación al empleado.</p>
+    </div>
+    <div class="element-card" style="cursor:pointer;border:2px solid transparent;transition:all 0.2s;" onclick="selectScenario(this,'D')">
+      <h3>🏦 D — Apertura de cuenta bancaria</h3>
+      <p>Cliente solicita apertura → agente valida documentos → aprobación de crédito → creación de cuenta → entrega de tarjeta.</p>
+    </div>
+  </div>
+
+  <div id="build-guide" style="display:none;margin-top:1.5rem;">
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--teal-dark);margin-bottom:1rem;">🗺 Guía de diseño para el proceso seleccionado</h3>
+
+    <div class="card">
+      <h3 style="font-size:0.9rem;font-weight:700;color:var(--gray-700);margin-bottom:0.75rem;">Preguntas guía para modelar tu proceso:</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem;">
+        <li style="display:flex;gap:0.75rem;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</div><span style="font-size:0.87rem;color:var(--gray-700);">¿Cuántos participantes hay en el proceso? ¿Los representarías con pools o con lanes? ¿Por qué?</span></li>
+        <li style="display:flex;gap:0.75rem;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</div><span style="font-size:0.87rem;color:var(--gray-700);">¿Cuál es el evento que dispara el inicio del proceso? ¿Es un mensaje, una condición o un tiempo?</span></li>
+        <li style="display:flex;gap:0.75rem;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</div><span style="font-size:0.87rem;color:var(--gray-700);">¿Hay alguna decisión en el proceso? ¿Qué tipo de compuerta usarías: XOR, AND u OR? Justifica tu elección.</span></li>
+        <li style="display:flex;gap:0.75rem;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</div><span style="font-size:0.87rem;color:var(--gray-700);">¿Existen tareas que podrían agruparse como un subproceso? ¿Por qué simplificaría el diagrama?</span></li>
+        <li style="display:flex;gap:0.75rem;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">5</div><span style="font-size:0.87rem;color:var(--gray-700);">¿El proceso puede terminar de más de una forma? ¿Cuántos eventos de fin necesitas y qué representan?</span></li>
+      </ul>
+    </div>
+
+    <div class="card" style="background:var(--accent-light);border-color:#FFDDD0;">
+      <h3 style="font-size:0.9rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem;">🗣 Debate en clase</h3>
+      <p style="font-size:0.87rem;color:var(--gray-700);line-height:1.6;">Una vez modelado el proceso, comparte tu diagrama con un compañero. ¿Modelaron el mismo proceso de la misma forma? Discutan: ¿qué diferencias existen? ¿Cuál versión comunica mejor el proceso y por qué?</p>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:0.9rem;font-weight:700;color:var(--gray-700);margin-bottom:0.75rem;">✅ Lista de verificación del diagrama</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;" id="checklist">
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Tiene al menos un evento de inicio y uno de fin</label></li>
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Cada actividad tiene un nombre claro en formato verbo+sustantivo</label></li>
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Las compuertas están correctamente etiquetadas con las condiciones</label></li>
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Los participantes están organizados en pools y/o lanes</label></li>
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Los flujos de secuencia están claramente conectados sin cruces innecesarios</label></li>
+        <li><label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer;font-size:0.85rem;color:var(--gray-700);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--teal);"> Se usaron los símbolos correctos para cada tipo de elemento</label></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ SÍNTESIS ══════ -->
+<div id="sintesis" class="section">
+<div class="section-body">
+
+  <div class="section-title">Síntesis de la sesión</div>
+  <p class="section-desc">Puntos clave que llevás de esta clase sobre BPMN.</p>
+
+  <div class="synth-card">
+    <h3>📌 ¿Qué es BPMN?</h3>
+    <p>BPMN (Business Process Model and Notation) es un <strong>estándar gráfico internacional</strong> para modelar procesos de negocio, desarrollado por la OMG. Permite que analistas, gerentes y desarrolladores compartan la misma representación visual de un proceso, eliminando ambigüedades.</p>
+  </div>
+
+  <div class="synth-card">
+    <h3>🧩 Los seis grupos de elementos</h3>
+    <ul>
+      <li><strong>Flujos:</strong> Secuencia (orden interno) y Mensaje (comunicación entre entidades)</li>
+      <li><strong>Eventos:</strong> Inicio (círculo delgado), Intermedio (doble borde), Fin (borde grueso)</li>
+      <li><strong>Actividades:</strong> Tareas (acciones simples) y Subprocesos (grupos colapsables)</li>
+      <li><strong>Compuertas:</strong> XOR (exclusivo), AND (paralelo), OR (inclusivo)</li>
+      <li><strong>Participantes:</strong> Pools (entidades) y Lanes (roles o departamentos)</li>
+      <li><strong>Artefactos:</strong> Anotaciones, Datos y Grupos (información complementaria)</li>
+    </ul>
+  </div>
+
+  <div class="synth-card">
+    <h3>⚙️ Compuertas: la clave de la lógica del proceso</h3>
+    <ul>
+      <li><strong>XOR (✕):</strong> Un solo camino — la decisión es excluyente</li>
+      <li><strong>AND (+):</strong> Todos los caminos simultáneamente — ejecución paralela</li>
+      <li><strong>OR (○):</strong> Uno o más caminos — dependiendo de condiciones combinadas</li>
+    </ul>
+  </div>
+
+  <div class="synth-card">
+    <h3>🌍 Aplicaciones de BPMN</h3>
+    <p>Es flexible y escalable: se aplica en logística, banca, manufactura, salud, educación y cualquier organización que necesite documentar, optimizar o automatizar sus procesos. Los motores BPM (Bizagi, Camunda, Bonita) pueden ejecutar directamente los diagramas BPMN.</p>
+  </div>
+
+  <div class="synth-card">
+    <h3>💡 Para recordar siempre</h3>
+    <ul>
+      <li>BPMN es un <em>lenguaje</em>, no una herramienta. Puedes dibujarlo en cualquier software.</li>
+      <li>Un buen diagrama BPMN debe poder ser entendido por cualquier persona capacitada, sin necesidad de explicaciones adicionales.</li>
+      <li>El objetivo final es <strong>cerrar la brecha</strong> entre quienes diseñan los procesos y quienes los implementan.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="background: linear-gradient(135deg, var(--teal-dark), var(--teal));color:white;margin-top:1.5rem;">
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.75rem;color:white;">🚀 ¿Qué sigue?</h3>
+    <p style="font-size:0.87rem;opacity:0.9;line-height:1.65;">En la próxima sesión profundizaremos en la <strong>optimización de procesos</strong> usando los diagramas BPMN como base: identificación de cuellos de botella, análisis de valor agregado y rediseño de flujos. Te recomendamos revisar Bizagi Modeler (gratuito) para practicar el modelado antes de la próxima clase.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ BIBLIOGRAFÍA ══════ -->
+<div id="bib" class="section">
+<div class="section-body">
+
+  <div class="section-title">Bibliografía</div>
+  <p class="section-desc">Fuentes de referencia utilizadas en esta sesión.</p>
+
+  <div class="bib-item">
+    <div class="bib-icon">🌐</div>
+    <div>
+      <strong>Bizagi | eLearning (2024)</strong><br>
+      <em>Business Analyst — Curso online de modelado BPMN</em><br>
+      <a href="https://elearning.bizagi.com/my/busanalyst.php" target="_blank">https://elearning.bizagi.com/my/busanalyst.php</a>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <div class="bib-icon">📄</div>
+    <div>
+      <strong>Universidad de los Andes (2017)</strong><br>
+      <em>Modelamiento de procesos con BPMN</em> — Planeación Institucional<br>
+      <a href="https://planeacion.uniandes.edu.co/images/Arquitectura-Institucional/INS-45-1-01-01_Modelamiento_de_Procesos_con_BPMN1.pdf" target="_blank">Ver documento PDF</a>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <div class="bib-icon">📘</div>
+    <div>
+      <strong>White, S. & Miers, D. (2009)</strong><br>
+      <em>Modelado BPMN — Guía de referencia y práctica</em><br>
+      <a href="https://users.dcc.uchile.cl/~nbaloian/DSS-DCC/Software/ModeladoBPMN.pdf" target="_blank">Acceder al documento</a>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <div class="bib-icon">📗</div>
+    <div>
+      <strong>Object Management Group — OMG (2011)</strong><br>
+      <em>Business Process Model and Notation (BPMN) Version 2.0</em> — Estándar oficial<br>
+      <a href="https://www.omg.org/spec/BPMN/2.0/" target="_blank">https://www.omg.org/spec/BPMN/2.0/</a>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <div class="bib-icon">🎓</div>
+    <div>
+      <strong>Dumas, M., La Rosa, M., Mendling, J. & Reijers, H. (2018)</strong><br>
+      <em>Fundamentals of Business Process Management</em> (2nd ed.) — Springer<br>
+      <a href="https://link.springer.com/book/10.1007/978-3-662-56509-4" target="_blank">Ver en Springer</a>
+    </div>
+  </div>
+
+  <div class="bib-item">
+    <div class="bib-icon">🌐</div>
+    <div>
+      <strong>Bizagi Modeler (s.f.)</strong><br>
+      <em>Herramienta gratuita para modelado BPMN</em><br>
+      <a href="https://www.bizagi.com/en/products/bpm-suite/modeler" target="_blank">Descargar Bizagi Modeler</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem;background:var(--gray-50);text-align:center;">
+    <p style="font-size:0.82rem;color:var(--gray-500);">Material didáctico preparado por <strong>Ing. Marcela Medina B., M.Sc.</strong> · Universidad Tecnológica ECOTEC<br>Gestión por Procesos — Unidad 3, Sesión 3 · Todos los derechos reservados</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ JAVASCRIPT ══════ -->
+<script>
+// ─── TAB SYSTEM ───
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── ACCORDION ───
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// ─── SCORE SYSTEM ───
+let totalScore = 0;
+function addScore(pts) {
+  totalScore += pts;
+  document.getElementById('total-score').textContent = totalScore;
+}
+
+// ─── SCENARIO SELECTOR ───
+function selectScenario(el, id) {
+  document.querySelectorAll('#construye .element-card').forEach(c => {
+    c.style.borderColor = 'transparent';
+    c.style.background = 'white';
+  });
+  el.style.borderColor = 'var(--teal)';
+  el.style.background = 'var(--teal-light)';
+  document.getElementById('build-guide').style.display = 'block';
+  document.getElementById('build-guide').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ══ QUIZ DATA ══
+const quizData = [
+  {
+    q: "¿Cuál organización mantiene actualmente el estándar BPMN 2.0?",
+    opts: ["Business Process Management Initiative (BPMI)", "Object Management Group (OMG)", "IEEE — Institute of Electrical and Electronics Engineers", "ISO — International Organization for Standardization"],
+    ans: 1,
+    exp: "Correcto. La BPMI creó BPMN, pero luego se fusionó con la OMG, que ahora mantiene el estándar en su versión 2.0."
+  },
+  {
+    q: "Un flujo de secuencia se distingue visualmente de un flujo de mensaje porque:",
+    opts: ["El flujo de secuencia usa líneas discontinuas con sobre", "El flujo de mensaje usa flechas sólidas", "El flujo de secuencia usa flechas sólidas; el de mensaje usa líneas discontinuas con sobre", "Ambos usan el mismo símbolo pero diferente color"],
+    ans: 2,
+    exp: "Correcto. Flecha sólida = secuencia (orden interno). Línea discontinua con sobre = mensaje entre entidades."
+  },
+  {
+    q: "¿Qué tipo de compuerta permite que VARIOS caminos se sigan de forma SIMULTÁNEA?",
+    opts: ["Exclusiva (XOR)", "Paralela (AND)", "Inclusiva (OR)", "Condicional (IF)"],
+    ans: 1,
+    exp: "La compuerta AND (paralela) abre todos los caminos al mismo tiempo, útil para tareas que deben ejecutarse en paralelo."
+  },
+  {
+    q: "En un diagrama BPMN, los 'Lanes' o carriles sirven para:",
+    opts: ["Separar procesos de diferentes organizaciones", "Dividir el pool en roles, departamentos o funciones dentro de la misma entidad", "Representar flujos de mensaje entre empresas distintas", "Agrupar eventos de inicio y fin"],
+    ans: 1,
+    exp: "Los Lanes dividen un Pool en departamentos o roles: por ejemplo, Ventas y Finanzas dentro de la piscina 'Empresa'."
+  },
+  {
+    q: "Un subproceso en BPMN se diferencia de una tarea porque:",
+    opts: ["Un subproceso es siempre automático; una tarea puede ser manual", "Un subproceso agrupa varias tareas que pueden detallarse internamente; una tarea es indivisible", "Una tarea puede tener eventos intermedios; un subproceso no", "No hay diferencia funcional, solo visual"],
+    ans: 1,
+    exp: "El subproceso encapsula un flujo completo dentro de una única actividad, simplificando el diagrama principal."
+  },
+  {
+    q: "¿Cuál elemento BPMN se usa para representar información adicional que no afecta el flujo del proceso?",
+    opts: ["Evento intermedio", "Compuerta inclusiva", "Anotación (artefacto)", "Carril (Lane)"],
+    ans: 2,
+    exp: "Las Anotaciones son artefactos de texto que añaden contexto al diagrama sin alterar la lógica del flujo."
+  },
+  {
+    q: "El principal propósito de BPMN en una organización es:",
+    opts: ["Reemplazar los sistemas ERP como SAP", "Cerrar la brecha de comunicación entre el diseño del proceso y su implementación técnica", "Crear interfaces de usuario para aplicaciones web", "Gestionar la base de datos de clientes"],
+    ans: 1,
+    exp: "BPMN es un lenguaje visual que permite que negocio y tecnología compartan la misma comprensión de un proceso."
+  },
+  {
+    q: "Si en un proceso de aprobación pueden activarse una o más rutas dependiendo de condiciones combinadas, la compuerta correcta es:",
+    opts: ["XOR — Exclusiva", "AND — Paralela", "OR — Inclusiva", "Condicional con evento"],
+    ans: 2,
+    exp: "La OR Inclusiva permite que uno o varios caminos se activen según las condiciones, a diferencia de la XOR que solo activa uno."
+  }
+];
+
+let currentQ = 0;
+let quizScore = 0;
+
+function renderQuiz() {
+  if (currentQ >= quizData.length) {
+    document.getElementById('quiz-container').innerHTML = `
+      <div class="result-overlay show">
+        <div class="result-emoji">${quizScore >= 6 ? '🏆' : quizScore >= 4 ? '👍' : '📖'}</div>
+        <div class="result-title">${quizScore >= 6 ? '¡Excelente dominio!' : quizScore >= 4 ? '¡Buen resultado!' : 'Sigue practicando'}</div>
+        <div class="result-sub">Obtuviste ${quizScore} de ${quizData.length} puntos en el quiz de conceptos.</div>
+        <button class="btn btn-primary" onclick="resetQuiz()">🔄 Intentar de nuevo</button>
+      </div>`;
+    return;
+  }
+  const d = quizData[currentQ];
+  const pct = (currentQ / quizData.length * 100).toFixed(0);
+  document.getElementById('quiz-progress-bar').style.width = pct + '%';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="quiz-question">Pregunta ${currentQ + 1} de ${quizData.length}: ${d.q}</div>
+    <div class="quiz-options">
+      ${d.opts.map((o, i) => `<button class="quiz-opt" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="quiz-fb"></div>
+    <div class="quiz-nav">
+      <span class="quiz-counter">Puntos: ${quizScore}</span>
+      <button class="btn btn-primary" id="quiz-next" onclick="nextQuiz()" style="display:none;">Siguiente →</button>
+    </div>`;
+}
+
+function answerQuiz(idx) {
+  const d = quizData[currentQ];
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+  const opts = document.querySelectorAll('.quiz-opt');
+  const fb = document.getElementById('quiz-fb');
+  if (idx === d.ans) {
+    opts[idx].classList.add('correct');
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = '✅ ' + d.exp;
+    quizScore++;
+    document.getElementById('quiz-score-badge').textContent = quizScore + ' / ' + quizData.length;
+    addScore(10);
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[d.ans].classList.add('correct');
+    fb.className = 'quiz-feedback show wrong';
+    fb.textContent = '❌ ' + d.exp;
+  }
+  document.getElementById('quiz-next').style.display = 'block';
+}
+
+function nextQuiz() {
+  currentQ++;
+  renderQuiz();
+}
+
+function resetQuiz() {
+  currentQ = 0;
+  quizScore = 0;
+  document.getElementById('quiz-score-badge').textContent = '0 / ' + quizData.length;
+  renderQuiz();
+}
+
+renderQuiz();
+
+// ══ MATCHING GAME ══
+const matchData = [
+  { left: "Compuerta XOR", right: "Solo un camino posible; decisión excluyente" },
+  { left: "Pool", right: "Representa a un participante o entidad completa en el proceso" },
+  { left: "Evento de Fin", right: "Círculo de borde grueso que señala el término del proceso" },
+  { left: "Flujo de Mensaje", right: "Línea discontinua con sobre entre diferentes entidades" },
+  { left: "Subproceso", right: "Agrupación de tareas que se puede expandir o colapsar" },
+  { left: "Lane", right: "Divide una piscina en roles o departamentos internos" },
+];
+
+let matchSel = null;
+let matchSelSide = null;
+let matchScore = 0;
+let matchedPairs = 0;
+
+function renderMatch() {
+  const shuffledRight = [...matchData].sort(() => Math.random() - 0.5);
+  const left = document.getElementById('match-left');
+  const right = document.getElementById('match-right');
+  left.innerHTML = matchData.map((m, i) =>
+    `<div class="match-item" data-id="${i}" data-side="left" onclick="selectMatch(this)">${m.left}</div>`
+  ).join('');
+  right.innerHTML = shuffledRight.map((m) => {
+    const idx = matchData.findIndex(d => d.right === m.right);
+    return `<div class="match-item" data-id="${idx}" data-side="right" onclick="selectMatch(this)">${m.right}</div>`;
+  }).join('');
+}
+
+function selectMatch(el) {
+  if (el.classList.contains('matched')) return;
+  const id = parseInt(el.dataset.id);
+  const side = el.dataset.side;
+  if (!matchSel) {
+    matchSel = el;
+    matchSelSide = side;
+    el.classList.add('selected');
+  } else {
+    if (matchSelSide === side) {
+      matchSel.classList.remove('selected');
+      matchSel = el;
+      matchSelSide = side;
+      el.classList.add('selected');
+      return;
+    }
+    const prevId = parseInt(matchSel.dataset.id);
+    if (prevId === id) {
+      matchSel.classList.remove('selected');
+      matchSel.classList.add('matched');
+      el.classList.add('matched');
+      matchedPairs++;
+      matchScore++;
+      document.getElementById('match-score-badge').textContent = matchScore + ' / 6';
+      addScore(12);
+      if (matchedPairs === matchData.length) {
+        const fb = document.getElementById('match-feedback');
+        fb.style.display = 'block';
+        fb.style.background = 'var(--green-light)';
+        fb.style.color = 'var(--green)';
+        fb.textContent = '🎉 ¡Excelente! Emparejaste todos los elementos correctamente.';
+      }
+    } else {
+      matchSel.classList.remove('selected');
+      el.classList.add('wrong-flash');
+      matchSel.classList.add('wrong-flash');
+      setTimeout(() => {
+        el.classList.remove('wrong-flash');
+        matchSel.classList.remove('wrong-flash');
+      }, 600);
+    }
+    matchSel = null;
+    matchSelSide = null;
+  }
+}
+
+function resetMatch() {
+  matchSel = null; matchSelSide = null; matchScore = 0; matchedPairs = 0;
+  document.getElementById('match-score-badge').textContent = '0 / 6';
+  document.getElementById('match-feedback').style.display = 'none';
+  renderMatch();
+}
+
+renderMatch();
+
+// ══ TRUE / FALSE ══
+const tfData = [
+  { stmt: "BPMN fue creado por la OMG (Object Management Group) desde su origen.", ans: false, exp: "Falso. BPMN fue creado por la BPMI, que luego se fusionó con la OMG. Actualmente la OMG mantiene el estándar." },
+  { stmt: "Un flujo de secuencia puede cruzar los límites de un Pool para comunicar dos organizaciones distintas.", ans: false, exp: "Falso. Para comunicar entidades de diferentes Pools se usa un Flujo de Mensaje (línea discontinua), no un Flujo de Secuencia." },
+  { stmt: "En una compuerta AND (paralela), todas las rutas de salida se activan simultáneamente.", ans: true, exp: "Verdadero. La compuerta AND divide el flujo en múltiples caminos paralelos que se ejecutan al mismo tiempo." },
+  { stmt: "Los Artefactos en BPMN (anotaciones, datos, grupos) pueden modificar el flujo del proceso.", ans: false, exp: "Falso. Los artefactos son elementos informativos y de organización visual. No afectan la lógica ni el flujo del proceso." },
+  { stmt: "Un subproceso permite simplificar un diagrama complejo al ocultar detalles internos que pueden detallarse en un diagrama separado.", ans: true, exp: "Verdadero. Los subprocesos encapsulan complejidad, manteniendo el diagrama principal limpio y legible." },
+  { stmt: "BPMN solo puede ser utilizado por desarrolladores de software para programar flujos de trabajo automatizados.", ans: false, exp: "Falso. BPMN está diseñado para ser comprendido por todos: analistas de negocio, gerentes y desarrolladores. Es un lenguaje visual compartido." },
+];
+
+let currentTF = 0;
+let tfScore = 0;
+
+function renderTF() {
+  if (currentTF >= tfData.length) {
+    document.getElementById('tf-container').innerHTML = `
+      <div class="result-overlay show">
+        <div class="result-emoji">${tfScore >= 5 ? '🌟' : tfScore >= 3 ? '👏' : '🔁'}</div>
+        <div class="result-title">${tfScore >= 5 ? '¡Dominas la teoría!' : tfScore >= 3 ? '¡Bien hecho!' : 'Revisa los conceptos'}</div>
+        <div class="result-sub">Obtuviste ${tfScore} de ${tfData.length} en la actividad Verdadero / Falso.</div>
+        <button class="btn btn-primary" onclick="resetTF()">🔄 Reiniciar</button>
+      </div>`;
+    return;
+  }
+  const d = tfData[currentTF];
+  const pct = (currentTF / tfData.length * 100).toFixed(0);
+  document.getElementById('tf-progress-bar').style.width = pct + '%';
+  document.getElementById('tf-container').innerHTML = `
+    <div class="tf-statement">${currentTF + 1}. ${d.stmt}</div>
+    <div class="tf-btns">
+      <button class="tf-btn verdadero" onclick="answerTF(true, this)">✅ Verdadero</button>
+      <button class="tf-btn falso" onclick="answerTF(false, this)">❌ Falso</button>
+    </div>
+    <div id="tf-fb" class="quiz-feedback"></div>
+    <div class="quiz-nav">
+      <span class="quiz-counter">Puntos: ${tfScore}</span>
+      <button class="btn btn-primary" id="tf-next" onclick="nextTF()" style="display:none;">Siguiente →</button>
+    </div>`;
+}
+
+function answerTF(val, btn) {
+  const d = tfData[currentTF];
+  document.querySelectorAll('.tf-btn').forEach(b => b.classList.add('disabled'));
+  const fb = document.getElementById('tf-fb');
+  const correct = val === d.ans;
+  btn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+  fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.textContent = (correct ? '✅ ' : '❌ ') + d.exp;
+  if (correct) {
+    tfScore++;
+    document.getElementById('tf-score-badge').textContent = tfScore + ' / 6';
+    addScore(10);
+  }
+  document.getElementById('tf-next').style.display = 'block';
+}
+
+function nextTF() { currentTF++; renderTF(); }
+function resetTF() {
+  currentTF = 0; tfScore = 0;
+  document.getElementById('tf-score-badge').textContent = '0 / 6';
+  renderTF();
+}
+
+renderTF();
+
+// ══ FILL IN THE BLANK ══
+const fillSentences = [
+  {
+    parts: ["BPMN busca cerrar la ", "_GAP_", " de comunicación entre el diseño del proceso y su implementación técnica."],
+    blank: 0, answer: "brecha",
+    options: ["brecha", "velocidad", "distancia", "documentación", "cadena"]
+  },
+  {
+    parts: ["Un evento de inicio se representa como un círculo de borde ", "_GAP_", ", mientras que el evento de fin tiene un borde más ", "_GAP2_", "."],
+    blank: 0, blank2: 1, answer: "delgado", answer2: "grueso",
+    options: ["delgado", "grueso", "punteado", "doble", "discontinuo"]
+  },
+  {
+    parts: ["La compuerta ", "_GAP_", " permite que únicamente un camino sea seguido, basándose en una condición excluyente."],
+    blank: 0, answer: "XOR",
+    options: ["XOR", "AND", "OR", "IF", "NOT"]
+  },
+  {
+    parts: ["Los ", "_GAP_", " dividen una piscina (pool) en diferentes roles o departamentos dentro de la misma organización."],
+    blank: 0, answer: "carriles",
+    options: ["carriles", "flujos", "subprocesos", "eventos", "grupos"]
+  },
+  {
+    parts: ["Un ", "_GAP_", " agrupa varias tareas que se ejecutan como una única actividad en el diagrama principal, simplificando su lectura."],
+    blank: 0, answer: "subproceso",
+    options: ["subproceso", "carril", "gateway", "artefacto", "pool"]
+  }
+];
+
+let fillScore = 0;
+let currentFill = 0;
+let fillSelectedChip = null;
+
+function renderFill() {
+  if (currentFill >= fillSentences.length) {
+    document.getElementById('fill-container').innerHTML = `
+      <div class="result-overlay show">
+        <div class="result-emoji">${fillScore >= 4 ? '🎉' : fillScore >= 2 ? '👍' : '📚'}</div>
+        <div class="result-title">${fillScore >= 4 ? '¡Muy bien!' : '¡Sigue practicando!'}</div>
+        <div class="result-sub">Completaste ${fillScore} de ${fillSentences.length} oraciones correctamente.</div>
+        <button class="btn btn-primary" onclick="resetFill()">🔄 Reiniciar</button>
+      </div>`;
+    return;
+  }
+  const s = fillSentences[currentFill];
+  const shuffled = [...s.options].sort(() => Math.random() - 0.5);
+  const sentence = s.parts.map((p, i) => {
+    if (p === '_GAP_') return `<span class="fill-blank" id="blank-0" onclick="fillIn(0)">___________</span>`;
+    if (p === '_GAP2_') return `<span class="fill-blank" id="blank-1" onclick="fillIn(1)">___________</span>`;
+    return p;
+  }).join('');
+
+  document.getElementById('fill-container').innerHTML = `
+    <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:0.75rem;">Oración ${currentFill + 1} de ${fillSentences.length}:</p>
+    <div class="fill-text">${sentence}</div>
+    <p style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.5rem;">Banco de palabras — haz clic en la palabra correcta:</p>
+    <div class="fill-options">
+      ${shuffled.map(o => `<span class="fill-chip" onclick="selectFillChip(this,'${o}')">${o}</span>`).join('')}
+    </div>
+    <div id="fill-fb" class="quiz-feedback"></div>
+    <button class="btn btn-ghost" onclick="nextFill()" id="fill-next" style="display:none;margin-top:0.5rem;">Siguiente →</button>`;
+}
+
+let fillAnswers = {};
+function selectFillChip(el, word) {
+  fillSelectedChip = { el, word };
+  document.querySelectorAll('.fill-chip').forEach(c => c.style.background = '');
+  el.style.background = 'var(--teal-light)';
+  el.style.borderColor = 'var(--teal)';
+  // Auto-check if only one blank
+  const s = fillSentences[currentFill];
+  if (!s.blank2) checkFill(word, el);
+}
+
+function checkFill(word, chipEl) {
+  const s = fillSentences[currentFill];
+  const fb = document.getElementById('fill-fb');
+  const blank = document.getElementById('blank-0');
+  if (word === s.answer) {
+    blank.textContent = word;
+    blank.style.color = 'var(--green)';
+    blank.style.borderColor = 'var(--green)';
+    chipEl.classList.add('correct-source');
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = '✅ ¡Correcto! Esa es la palabra que completa la definición.';
+    fillScore++;
+    document.getElementById('fill-score-badge').textContent = fillScore + ' / 5';
+    addScore(10);
+  } else {
+    fb.className = 'quiz-feedback show wrong';
+    fb.textContent = '❌ Esa no es la palabra correcta. Intenta de nuevo.';
+    chipEl.style.background = 'var(--red-light)';
+    chipEl.style.borderColor = 'var(--red)';
+    setTimeout(() => { chipEl.style.background = ''; chipEl.style.borderColor = ''; }, 800);
+    return;
+  }
+  document.getElementById('fill-next').style.display = 'inline-block';
+  document.querySelectorAll('.fill-chip').forEach(c => c.style.pointerEvents = 'none');
+}
+
+function fillIn(blankIdx) {
+  if (!fillSelectedChip) return;
+  checkFill(fillSelectedChip.word, fillSelectedChip.el);
+}
+
+function nextFill() { currentFill++; fillSelectedChip = null; renderFill(); }
+function resetFill() {
+  currentFill = 0; fillScore = 0; fillSelectedChip = null;
+  document.getElementById('fill-score-badge').textContent = '0 / 5';
+  renderFill();
+}
+
+renderFill();
+
+// ══ SCENARIOS ══
+const scenarioData = [
+  {
+    title: "Caso 1: Proceso de contratación",
+    desc: "El departamento de Ventas y el departamento de RRHH deben revisar simultáneamente el perfil de un candidato antes de continuar el proceso. ¿Qué compuerta BPMN usarías?",
+    opts: ["Compuerta XOR — porque hay que elegir un solo camino", "Compuerta AND — para que ambas revisiones ocurran al mismo tiempo", "Compuerta OR — para que una o ambas áreas revisen según disponibilidad", "Evento intermedio de tiempo — porque hay que esperar"],
+    ans: 1,
+    exp: "La AND (paralela) divide el flujo para que Ventas y RRHH revisen simultáneamente. Una compuerta de unión AND esperaría a que ambos terminen."
+  },
+  {
+    title: "Caso 2: Solicitud de crédito",
+    desc: "En un banco, una solicitud de crédito puede terminar de tres formas: aprobada, aprobada con garantías adicionales, o rechazada. Solo una de estas opciones ocurrirá. ¿Qué compuerta es la correcta?",
+    opts: ["Compuerta AND — para activar todos los caminos", "Compuerta OR — para activar uno o más caminos", "Compuerta XOR — porque solo un resultado es posible", "Evento de fin múltiple"],
+    ans: 2,
+    exp: "La XOR es correcta: la solicitud solo puede terminar en UNO de los tres estados posibles. Los tres caminos son mutuamente excluyentes."
+  },
+  {
+    title: "Caso 3: Comunicación con proveedor",
+    desc: "Una empresa necesita representar el intercambio de documentos (cotización, confirmación de pedido) con un proveedor externo en el diagrama BPMN. ¿Qué elemento usarías?",
+    opts: ["Flujo de secuencia — flecha sólida dentro del pool", "Lane — carril para el proveedor dentro del mismo pool", "Flujo de mensaje — línea discontinua entre pools distintos", "Evento intermedio de mensaje"],
+    ans: 2,
+    exp: "El Flujo de Mensaje conecta entidades de DIFERENTES pools. Al ser empresa y proveedor organizaciones distintas, cada una tiene su propio pool y se comunican con flujo de mensaje."
+  },
+  {
+    title: "Caso 4: Proceso complejo de logística",
+    desc: "Un proceso de despacho tiene una subsección de 8 pasos para la preparación del paquete que involucra varios departamentos. Para simplificar el diagrama principal, lo ideal es:",
+    opts: ["Mostrar todos los 8 pasos explícitamente en el diagrama principal", "Crear un subproceso colapsado que encapsule esos 8 pasos", "Usar anotaciones para describir los 8 pasos en texto", "Crear 8 Lanes separados para cada paso"],
+    ans: 1,
+    exp: "Un subproceso colapsado (+) mantiene limpio el diagrama principal y permite que los 8 pasos internos se detallen en un diagrama separado."
+  }
+];
+
+let scenarioScore = 0;
+let scenarioDone = new Set();
+
+function renderScenarios() {
+  document.getElementById('scenario-container').innerHTML = scenarioData.map((s, i) => `
+    <div class="scenario-box">
+      <h4>${s.title}</h4>
+      <p>${s.desc}</p>
+      <div class="scenario-opts" id="sc-opts-${i}">
+        ${s.opts.map((o, j) => `<button class="scenario-opt" onclick="answerScenario(${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}
+      </div>
+      <div id="sc-fb-${i}" class="quiz-feedback"></div>
+    </div>`
+  ).join('');
+}
+
+function answerScenario(scIdx, optIdx) {
+  if (scenarioDone.has(scIdx)) return;
+  const s = scenarioData[scIdx];
+  const opts = document.querySelectorAll(`#sc-opts-${scIdx} .scenario-opt`);
+  const fb = document.getElementById(`sc-fb-${scIdx}`);
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  if (optIdx === s.ans) {
+    opts[optIdx].classList.add('correct');
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = '✅ ' + s.exp;
+    scenarioScore++;
+    document.getElementById('scenario-score-badge').textContent = scenarioScore + ' / 4';
+    addScore(15);
+  } else {
+    opts[optIdx].classList.add('wrong');
+    opts[s.ans].classList.add('correct');
+    fb.className = 'quiz-feedback show wrong';
+    fb.textContent = '❌ ' + s.exp;
+  }
+  scenarioDone.add(scIdx);
+}
+
+renderScenarios();
+</script>
+</body>
+</html>
